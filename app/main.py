@@ -5,30 +5,36 @@ import app.db_config as database
 
 app = Flask(__name__) #declarates the statement to running the app
 api = Api(app) # declarates the API as variable to then to establishing the endpoints
-CORS(app) #
+CORS(app) # 
 
-''' Lines for the JSON options to manage endpoints in insomnia (line 12 to 44)'''
+''' Lines for the JSON options to manage endpoints in insomnia (line 12 to )'''
 #generates the argument for the deployment of the POST endpoint
 post_assaults_args = reqparse.RequestParser()
 
-#establishes the POST variables with their type, error mesaage and requested type (15 to 27)
+#establishes the POST variables with their type, error mesaage and requested type (15 to 20)
 post_assaults_args.add_argument(
     "id", type=int, help="ERROR id value needs to be an integer", required=True)
 post_assaults_args.add_argument(
     "crime_type", type=str, help="ERROR crime_type is required", required=True)
-post_assaults_args.add_argument( 
-    "coordinates", type=str, help="ERROR coordinates is required", required=True)
+coordinates = {
+    "x": post_assaults_args.add_argument("x", type=str, help="ERROR coordinates is required", required=True),
+    "y": post_assaults_args.add_argument("y", type=str, help="ERROR coordinates is required", required=True)
+}
 
 #generates the argument for the deployment of the PATCH endpoint
 patch_assaults_args = reqparse.RequestParser()
 
-#establishes the POST variables with their type, error mesaage and requested type (33 to 44)
+#establishes the POST variables with their type, error mesaage and requested type (25 to 31)
 patch_assaults_args.add_argument(
     "id", type=int, help="ERROR id value needs to be an integer", required=False)
 patch_assaults_args.add_argument(
     "crime_type", type=str, help="ERROR crime_type is required", required=False)
-patch_assaults_args.add_argument(
-    "coordinates", type=str, help="ERROR coordinates is required", required=False)
+coordinates = {
+    "x": patch_assaults_args.add_argument("x", type=str, help="ERROR coordinates is required", required=False),
+    "y": patch_assaults_args.add_argument("y", type=str, help="ERROR coordinates is required", required=False)
+}
+
+        
 
 #class made for testing the connection with the db
 class Test(Resource):
@@ -64,7 +70,9 @@ class Assault(Resource):
         database.db.assault.insert_one({ 
             'id': args['id'],
             'crime_type': args['crime_type'],
-            'coordinates': args['coordinates'],
+            'x': args['x'],
+            'y': args['y'],
+            
         })
         return jsonify(args) #returns a jsonified response
 
@@ -78,7 +86,8 @@ class Assault(Resource):
             {'$set':{
                'id': args['id'],
                 'crime_type': args['crime_type'],
-                'coordinates': args['coordinates'],
+                'x': args['x'],
+                'y': args['y'],
             }}
         )
         return jsonify(args) #returns a jsonified response
@@ -93,7 +102,8 @@ class Assault(Resource):
             {'$set':{
                 'id': args['id'] or assault['id'],
                 'crime_type': args['crime_type'] or assault['crime_type'],
-                'coordinates': args['coordinates'] or assault['coordinates'],
+                'x': args['x'] or assault['x'],
+                'y': args['y'] or assault['y'],
             }
         })
 
