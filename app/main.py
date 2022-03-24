@@ -138,7 +138,7 @@ class Assault(Resource):
 #defines the endpoints for the url to use the API by doing the classes' operations (lines 151 to 153)
 api.add_resource(Test,'/test/')
 api.add_resource(Assaults,'/assaults/')
-api.add_resource(Assault, '/assault/', '/student/<int:id>/')
+api.add_resource(Assault, '/assault/', '/assalut/<int:id>/')
 
 #runs the app for a local server
 if __name__ == '__main__':
