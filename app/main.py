@@ -17,8 +17,8 @@ post_assaults_args.add_argument(
 post_assaults_args.add_argument(
     "crime_type", type=str, help="ERROR crime_type is required", required=True)
 coordinates = {
-    "x": post_assaults_args.add_argument("x", type=str, help="ERROR coordinates is required", required=True),
-    "y": post_assaults_args.add_argument("y", type=str, help="ERROR coordinates is required", required=True)
+    "x": post_assaults_args.add_argument("x", type=str, help="ERROR coordinate x is required", required=False),
+    "y": post_assaults_args.add_argument("y", type=str, help="ERROR coordinate y is required", required=False)
 }
 
 #generates the argument for the deployment of the PATCH endpoint
