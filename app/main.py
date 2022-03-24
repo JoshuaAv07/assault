@@ -86,8 +86,10 @@ class Assault(Resource):
             {'$set':{
                'id': args['id'],
                 'crime_type': args['crime_type'],
+                coordinates:{
                 'x': args['x'],
                 'y': args['y'],
+                }
             }}
         )
         return jsonify(args) #returns a jsonified response
@@ -116,7 +118,7 @@ class Assault(Resource):
         assault = self.abort_if_not_exist(id) #aborts the operation if the id do not exists
         database.db.assault.delete_one({'id':id}) #deletes by getting the id
         del assault['_id'] #deletes the mongo _id of the student
-        return jsonify({'deleted student': assault}) #returns a jsonified response
+        return jsonify({'deleted': assault}) #returns a jsonified response
 
     #function that finds an id that exists already; 
     #aborts the operation and returns jsonfied message (line 134 to 138) 
