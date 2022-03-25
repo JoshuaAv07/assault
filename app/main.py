@@ -12,8 +12,7 @@ CORS(app) #
 post_assaults_args = reqparse.RequestParser()
 
 #establishes the POST variables with their type, error mesaage and requested type (15 to 20)
-post_assaults_args.add_argument(
-    "id", type=int, help="ERROR id value needs to be an integer", required=True)
+
 post_assaults_args.add_argument(
     "crime_type", type=str, help="ERROR crime_type is required", required=True)
 
@@ -21,8 +20,7 @@ post_assaults_args.add_argument(
 patch_assaults_args = reqparse.RequestParser()
 
 #establishes the POST variables with their type, error mesaage and requested type (25 to 31)
-patch_assaults_args.add_argument(
-    "id", type=int, help="ERROR id value needs to be an integer", required=False)
+
 patch_assaults_args.add_argument(
     "crime_type", type=str, help="ERROR crime_type is required", required=False)
 
@@ -53,54 +51,77 @@ class Assault(Resource):
 
     #function to POST a new student
     def post(self):
+        coordinates = request.json["coordinates"]
         args = post_assaults_args.parse_args() #gets the arguments at line 13
-        self.abort_if_id_exist(args['id']) #aborts the operation if the id already exists
+        id = self.get_next_id()+1
         #inserts one student with the help of the json inputs at lines 15 to 27 (lines 77 to 84)
-        self.validate_coordinates(request["coordinates"])
+        
+        self.validate_coordinates(request.json["coordinates"])
+        
         database.db.assault.insert_one({ 
-            'id': args['id'],
+            'id': id,
             'crime_type': args['crime_type'],
-            'coordinate':request['coordinates]            
+            'coordinates':{
+                "x": coordinates["x"],
+                "y": coordinates["y"]
+            }
         })
-        return jsonify(args) #returns a jsonified response
+        return self.get(id) #returns a jsonified response
 
     #function to PUT(update) a specific student
     def put(self, id): 
+        coordinates = request.json["coordinates"]
         args = post_assaults_args.parse_args() #gets the arguments at line 13
         self.abort_if_not_exist(id) #aborts the operation if the id do not exists
+        self.validate_coordinates(request.json["coordinates"])
         #updates students' with the help of the json inputs at lines 15 to 27 (lines 92 to 101)
         database.db.assault.update_one(
             {'id':id},
             {'$set':{
-               'id': args['id'],
                 'crime_type': args['crime_type'],
-                'x': args['x'],
-                'y': args['y'],
-
+                'coordinates':{
+                    "x": coordinates["x"],
+                    "y": coordinates["y"]
+                }
             }}
         )
-        return jsonify(args) #returns a jsonified response
+        return self.get(id) #returns a jsonified response
 
     #function to PATCH (update one) data from the student
     def patch(self, id):
+        coordinates = {}
+        try:
+            coordinates = request.json["coordinates"]
+            self.validate_coordinates(request.json["coordinates"])
+        except:
+            pass
+        
+        
         assault = self.abort_if_not_exist(id) #aborts the operation if the id do not exists
         args = patch_assaults_args.parse_args() #gets the arguments at line 30
         #updates one specific students' data with the help of the json inputs at lines 33 to 44 (lines 110 to 120)
+        try:
+            x = coordinates["x"]
+        except:
+            x = assault["coordinates"]["x"]
+        try:
+            y = coordinates["y"]
+        except:
+            y = assault["coordinates"]["y"]
         database.db.assault.update_one(
             {'id':id},
             {'$set':{
-                'id': args['id'] or assault['id'],
                 'crime_type': args['crime_type'] or assault['crime_type'],
-                coordinates:{
-                    'x': args['x'] or assault['x'],
-                    'y': args['y'] or assault['y'],
+                'coordinates':{
+                    "x": x,
+                    "y": y
                 }
             }
         })
 
         assault = self.abort_if_not_exist(id) #aborts the operation if the id do not exists
         del assault['_id'] #deletes the mongo _id of the student
-        return jsonify(assault) #returns a jsonified response
+        return self.get(id)  #returns a jsonified response
     
     #function to DELETE a specific student
     def delete(self, id):
@@ -127,11 +148,22 @@ class Assault(Resource):
             return assault
         
     def validate_coordinates(self,coordinates):
-        if type(coordinates.x)==str and type(coordinates.y)==str:
+        if not isinstance(coordinates["x"],str) and not isinstance(coordinates["y"],str):
             abort(jsonify({'error':"Coordinates must be and string"}))
-        if not coordinates.x or not coordinates.y:
+        if not coordinates["x"] or not coordinates["y"]:
             abort(jsonify({'error':"ERROR Coordinates is required"}))
             
+    def get_next_id(self):
+        response = list(database.db.assault.find()) #finds a list of all the students as a variable
+        assaults = [] # declares an empty list/array
+        # cicle to deletes every mongo _id from all students (lines 59 - 61)
+        for assault in response: 
+            del assault['_id']
+            assaults.append(assault) # adds the new results without _id
+
+        assaults = assaults[::-1]
+        
+        return assaults[0]["id"] # returns a jsonified dictionary with the results
 
 #defines the endpoints for the url to use the API by doing the classes' operations (lines 151 to 153)
 api.add_resource(Test,'/test/')
