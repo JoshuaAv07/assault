@@ -86,6 +86,7 @@ class Assault(Resource):
                 'crime_type': args['crime_type'],
                 'x': args['x'],
                 'y': args['y'],
+
             }}
         )
         return jsonify(args) #returns a jsonified response
@@ -100,8 +101,10 @@ class Assault(Resource):
             {'$set':{
                 'id': args['id'] or assault['id'],
                 'crime_type': args['crime_type'] or assault['crime_type'],
-                'x': args['x'] or assault['x'],
-                'y': args['y'] or assault['y'],
+                coordinates:{
+                    'x': args['x'] or assault['x'],
+                    'y': args['y'] or assault['y'],
+                }
             }
         })
 
