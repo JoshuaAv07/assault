@@ -68,9 +68,10 @@ class Assault(Resource):
         database.db.assault.insert_one({ 
             'id': args['id'],
             'crime_type': args['crime_type'],
-            'x': args['x'],
-            'y': args['y'],
-            
+            'coordinates':{
+                'x': args['x'],
+                'y': args['y'],
+            }
         })
         return jsonify(args) #returns a jsonified response
 
