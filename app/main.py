@@ -17,8 +17,8 @@ post_assaults_args.add_argument(
 post_assaults_args.add_argument(
     "crime_type", type=str, help="ERROR crime_type is required", required=True)
 coordinates = {
-    "x": post_assaults_args.add_argument("x", type=str, help="ERROR coordinate x is required", required=False),
-    "y": post_assaults_args.add_argument("y", type=str, help="ERROR coordinate y is required", required=False)
+    "x": post_assaults_args.add_argument("x", type=str, help="ERROR coordinates is required", required=True),
+    "y": post_assaults_args.add_argument("y", type=str, help="ERROR coordinates is required", required=True)
 }
 
 #generates the argument for the deployment of the PATCH endpoint
@@ -30,11 +30,9 @@ patch_assaults_args.add_argument(
 patch_assaults_args.add_argument(
     "crime_type", type=str, help="ERROR crime_type is required", required=False)
 coordinates = {
-    "x": patch_assaults_args.add_argument("x", type=str, help="ERROR coordinates is required", required=False),
-    "y": patch_assaults_args.add_argument("y", type=str, help="ERROR coordinates is required", required=False)
+    "x":patch_assaults_args.add_argument("x", type=str, help="ERROR coordinates is required", required=False),
+    "y":patch_assaults_args.add_argument("y", type=str, help="ERROR coordinates is required", required=False)
 }
-
-        
 
 #class made for testing the connection with the db
 class Test(Resource):
@@ -86,10 +84,8 @@ class Assault(Resource):
             {'$set':{
                'id': args['id'],
                 'crime_type': args['crime_type'],
-                coordinates:{
                 'x': args['x'],
                 'y': args['y'],
-                }
             }}
         )
         return jsonify(args) #returns a jsonified response
@@ -118,14 +114,14 @@ class Assault(Resource):
         assault = self.abort_if_not_exist(id) #aborts the operation if the id do not exists
         database.db.assault.delete_one({'id':id}) #deletes by getting the id
         del assault['_id'] #deletes the mongo _id of the student
-        return jsonify({'deleted': assault}) #returns a jsonified response
+        return jsonify({'deleted crime': assault}) #returns a jsonified response
 
     #function that finds an id that exists already; 
     #aborts the operation and returns jsonfied message (line 134 to 138) 
     def abort_if_id_exist(self, id):
         if database.db.assault.find_one({'id':id}):
             abort(
-                jsonify({'error':{'406': f"The student with the id: {id} already exist"}}))
+                jsonify({'error':{'406': f"The crime with the id: {id} already exist"}}))
 
     #function that searches an existent id; 
     #aborts the operation and returns a jsonfied message or process the operation (line 142 to 148) 
@@ -133,7 +129,7 @@ class Assault(Resource):
         assault = database.db.assault.find_one({'id':id})
         if not assault:
             abort(
-                jsonify({'error':{'404': f"The student with the id: {id} not found"}}))
+                jsonify({'error':{'404': f"The crime with the id: {id} not found"}}))
         else:
             return assault
 
