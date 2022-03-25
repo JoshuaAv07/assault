@@ -17,11 +17,6 @@ post_assaults_args.add_argument(
 post_assaults_args.add_argument(
     "crime_type", type=str, help="ERROR crime_type is required", required=True)
 
-'''coordinates = {
-    "coordinates.x": post_assaults_args.add_argument("x", type=str, help="ERROR coordinates is required", required=True),
-    "coordinates.y": post_assaults_args.add_argument("y", type=str, help="ERROR coordinates is required", required=True)
-}'''
-
 #generates the argument for the deployment of the PATCH endpoint
 patch_assaults_args = reqparse.RequestParser()
 
@@ -30,14 +25,9 @@ patch_assaults_args.add_argument(
     "id", type=int, help="ERROR id value needs to be an integer", required=False)
 patch_assaults_args.add_argument(
     "crime_type", type=str, help="ERROR crime_type is required", required=False)
-coordinates = {
-    "x":patch_assaults_args.add_argument("x", type=str, help="ERROR coordinates is required", required=False),
-    "y":patch_assaults_args.add_argument("y", type=str, help="ERROR coordinates is required", required=False)
-}
 
 #class made for testing the connection with the db
 class Test(Resource):
-
     def get(self):
         return jsonify({"message":"You are connected"})
 
@@ -66,13 +56,11 @@ class Assault(Resource):
         args = post_assaults_args.parse_args() #gets the arguments at line 13
         self.abort_if_id_exist(args['id']) #aborts the operation if the id already exists
         #inserts one student with the help of the json inputs at lines 15 to 27 (lines 77 to 84)
+        self.validate_coordinates(request["coordinates"])
         database.db.assault.insert_one({ 
             'id': args['id'],
             'crime_type': args['crime_type'],
-            'coordinates':{
-                'x': args['x'],
-                'y': args['y'],
-            }
+            'coordinate':request['coordinates]            
         })
         return jsonify(args) #returns a jsonified response
 
@@ -137,6 +125,13 @@ class Assault(Resource):
                 jsonify({'error':{'404': f"The crime with the id: {id} not found"}}))
         else:
             return assault
+        
+    def validate_coordinates(self,coordinates):
+        if type(coordinates.x)==str and type(coordinates.y)==str:
+            abort(jsonify({'error':"Coordinates must be and string"}))
+        if not coordinates.x or not coordinates.y:
+            abort(jsonify({'error':"ERROR Coordinates is required"}))
+            
 
 #defines the endpoints for the url to use the API by doing the classes' operations (lines 151 to 153)
 api.add_resource(Test,'/test/')
