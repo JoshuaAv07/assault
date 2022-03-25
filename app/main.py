@@ -53,13 +53,13 @@ class Assault(Resource):
     def post(self):
         coordinates = request.json["coordinates"]
         args = post_assaults_args.parse_args() #gets the arguments at line 13
-        #id = self.get_next_id()+1
+        id = self.get_next_id()
         #inserts one student with the help of the json inputs at lines 15 to 27 (lines 77 to 84)
         
         self.validate_coordinates(request.json["coordinates"])
         
         database.db.assault.insert_one({ 
-            'id': 1,
+            'id': id,
             'crime_type': args['crime_type'],
             'coordinates':{
                 "x": coordinates["x"],
@@ -155,15 +155,21 @@ class Assault(Resource):
             
     def get_next_id(self):
         response = list(database.db.assault.find()) #finds a list of all the students as a variable
-        assaults = [] # declares an empty list/array
-        # cicle to deletes every mongo _id from all students (lines 59 - 61)
-        for assault in response: 
-            del assault['_id']
-            assaults.append(assault) # adds the new results without _id
+        if response:
+            assaults = [] # declares an empty list/array
+            # cicle to deletes every mongo _id from all students (lines 59 - 61)
+            for assault in response: 
+                del assault['_id']
+                assaults.append(assault) # adds the new results without _id
 
-        assaults = assaults[::-1]
-        
-        return assaults[0]["id"] # returns a jsonified dictionary with the results
+            assaults = assaults[::-1]
+            
+            return assaults[0]["id"] + 1 # returns a jsonified dictionary with the results
+            
+        else:
+            assaults = 1
+            return assaults
+            
 
 #defines the endpoints for the url to use the API by doing the classes' operations (lines 151 to 153)
 api.add_resource(Test,'/test/')
