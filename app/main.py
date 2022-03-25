@@ -53,13 +53,13 @@ class Assault(Resource):
     def post(self):
         coordinates = request.json["coordinates"]
         args = post_assaults_args.parse_args() #gets the arguments at line 13
-        id = self.get_next_id()+1
+        #id = self.get_next_id()+1
         #inserts one student with the help of the json inputs at lines 15 to 27 (lines 77 to 84)
         
         self.validate_coordinates(request.json["coordinates"])
         
         database.db.assault.insert_one({ 
-            'id': id,
+            'id': 1,
             'crime_type': args['crime_type'],
             'coordinates':{
                 "x": coordinates["x"],
