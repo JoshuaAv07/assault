@@ -16,8 +16,7 @@ post_assaults_args.add_argument(
     "id", type=int, help="ERROR id value needs to be an integer", required=True)
 post_assaults_args.add_argument(
     "crime_type", type=str, help="ERROR crime_type is required", required=True)
-post_assaults_args.add_argument("coordinates.x", type=str, help="ERROR coordinates is required", required=True)
-post_assaults_args.add_argument("coordinates.y", type=str, help="ERROR coordinates is required", required=True)
+
 '''coordinates = {
     "coordinates.x": post_assaults_args.add_argument("x", type=str, help="ERROR coordinates is required", required=True),
     "coordinates.y": post_assaults_args.add_argument("y", type=str, help="ERROR coordinates is required", required=True)
