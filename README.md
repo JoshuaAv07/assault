@@ -27,6 +27,7 @@ in our APP.
 
 ## Deployment
 MongoDB was utilized to test our database connections and all the required information before deploying the API to the web. 
+
 <img src='https://www.bacula.lat/wp-content/uploads/2020/02/MongoDB_Logo_FullColorBlack_RGB-4td3yuxzjs.png' width="300">
 
 We utilized Heroku to Deploy the API.
