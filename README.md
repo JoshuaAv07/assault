@@ -39,6 +39,6 @@ The process of deployment was done through cmder with the implementation of hero
 
 ## Screenshots / API functioning.
 
-<img src='https://s7.gifyu.com/images/Captura46.png'>
 <img src='https://s7.gifyu.com/images/Captura47.png'>
+<img src='https://s7.gifyu.com/images/Screenshot-2022-03-30-212248.jpg'>
 
