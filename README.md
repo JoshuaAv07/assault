@@ -12,7 +12,7 @@ in our APP.
 - [Gustavo Valladolid](https://github.com/gusvalladolid)
 - [Carlos Salazar](https://github.com/CarlosSSC)
 - [Jonatan Rico](https://github.com/Jocarico)
-
+- [Daniel Flores](https://github.com/Poncho1424)
 
 
 ## Features
@@ -23,28 +23,22 @@ in our APP.
 - Cross platform
 
 
-## Screenshots
-
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
-
 ## Requirements
 
 ## Deployment
+MongoDB was utilized to test our database connections and all the required information before deploying the API to the web. 
+<img src='https://www.bacula.lat/wp-content/uploads/2020/02/MongoDB_Logo_FullColorBlack_RGB-4td3yuxzjs.png' width="300">
 
-To deploy this project run
+We utilized Heroku to Deploy the API.
 
-```bash
-  npm run deploy
-```
+<img src='https://tudip.com/wp-content/uploads/2018/06/1_9wOLuKSjCIAqSX_K8O0PKQ-800x302.png' width="300">
 
+The process of deployment was done through cmder with the implementation of heroku and git. 
 
-## Usage/Examples
+<img src='https://i0.wp.com/colaboratorio.net/wp-content/uploads/2017/01/git_000.jpg?fit=1200%2C600&ssl=1' width="300">
 
-```javascript
-import Component from 'my-project'
+## Screenshots / API functioning.
 
-function App() {
-  return <Component />
-}
-```
+<img src='https://s7.gifyu.com/images/Captura46.png'>
+<img src='https://s7.gifyu.com/images/Captura47.png'>
 
